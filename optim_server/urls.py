@@ -8,9 +8,9 @@ import json
 
 # Worker functions
 @app.route('/get_params')
-def get_params():
+def get_params(optim_problem="default"):
     try:
-        obj = models.ParamInstance.objects(assigned=False, done=False).order_by('id')
+        obj = models.ParamInstance.objects(assigned=False, done=False, optim_problem=optim_problem).order_by('id')
         obj = obj[0]
         obj.assigned = True
         obj.save()
@@ -41,11 +41,15 @@ def post_params():
     params = data['params']
     print params
     try:
+        optim_problem = data['optim_problem']
+    except:
+        optim_problem = "default"
+    try:
         optim_run = int(data['optim_run'])
     except:
         optim_run = 0
     params = [float(p) for p in params]
-    obj = models.ParamInstance(params=params, done=False, assigned=False, optim_run=optim_run)
+    obj = models.ParamInstance(params=params, done=False, assigned=False, optim_run=optim_run, optim_problem=optim_problem)
     obj.save()
     return str(obj.id)
 
@@ -57,3 +61,19 @@ def get_results():
     obj = models.ParamInstance.objects.get(id=id)
     #return obj.to_json()
     return json.dumps({'res': obj.score})
+
+
+@app.route('/get_run_num', methods=['GET'])
+def get_run_num():
+    """ return the first available value for a run on a given problem"""
+    try:
+        optim_problem = request.args.get('optim_problem')
+    except:
+        optim_problem = "default"
+    try:
+        obj = models.ParamInstance.objects(optim_problem=optim_problem).sort('-optim_run').first()
+        return str(obj.optim_run)
+    except:
+        return str(0)
+
+
