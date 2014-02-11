@@ -7,8 +7,9 @@ import json
 
 
 # Worker functions
-@app.route('/get_params')
-def get_params(optim_problem="default"):
+@app.route('/get_params', methods=['GET'])
+def get_params():
+    optim_problem = request.args.get('optim_problem')
     try:
         obj = models.ParamInstance.objects(assigned=False, done=False, optim_problem=optim_problem).order_by('id')
         obj = obj[0]

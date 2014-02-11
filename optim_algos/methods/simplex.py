@@ -21,7 +21,7 @@ class Simplex(OptimizationAlgorithm):
         else:
             self.points = points
         self.verbose = True
-        self.evaluations = [self.fitness(p) for p in self.points]
+        self.evaluations = self.fitness(self.points)
         self.order = []
         self.stored_results = []
         self.fig = plt.figure()
@@ -30,7 +30,7 @@ class Simplex(OptimizationAlgorithm):
     def evaluation_of_new(self):
         """ evaluation of the elements that require an evaluation"""
         for i in [elem for elem in range(self.popul_size) if self.evaluations[elem] is None]:
-            val = self.fitness(self.points[i])
+            val = self.fitness([self.points[i]])
             self.evaluations[i] = val
 
     def restart(self):
@@ -43,7 +43,7 @@ class Simplex(OptimizationAlgorithm):
                 if new_d > dist:
                     dist = new_d
         self.points = tools.random_init(self.popul_size, self.size, x1, 0.5 * dist * np.identity(self.size))
-        self.evaluations = [self.fitness(p) for p in self.points]
+        self.evaluations = self.fitness(self.points)
 
     def homotethia(self):
         """ homotethia of scale 0.5 centered on best point """
@@ -63,17 +63,17 @@ class Simplex(OptimizationAlgorithm):
     def get_reflection_point(self):
         "xr is the reflection points in comparaison to x0"
         self.xr = 2.0 * self.x0 - self.points[self.order[-1]]
-        self.eval_r = self.fitness(self.xr)
+        self.eval_r = self.fitness([self.xr])
 
     def get_extension_point(self):
         "xr is the reflection points in comparaison to x0"
         self.xe = 3.0 * self.x0 - 2.0 * self.points[self.order[-1]]
-        self.eval_e = self.fitness(self.xe)
+        self.eval_e = self.fitness([self.xe])
 
     def get_contraction_point(self):
         "xr is the reflection points in comparaison to x0"
         self.xc = 0.5 * self.x0 + 0.5 * self.points[self.order[-1]]
-        self.eval_c = self.fitness(self.xc)
+        self.eval_c = self.fitness([self.xc])
 
     def optimize_step(self):
         self.sort_points()
@@ -104,10 +104,11 @@ class Simplex(OptimizationAlgorithm):
     def optimize(self, kmax, verbose):
         for k in range(kmax):
             self.optimize_step()
+            print k
             if k % 20 == 0:
                 self.restart()
             self.plot()
-            raw_input()
+            #raw_input()
 
     def get_result(self):
         """ return the best value returned by the algorithm """
@@ -128,7 +129,8 @@ class Simplex(OptimizationAlgorithm):
 
 
 def main():
-    algo = Simplex(square_function)
+    fit = lambda tab: [square_function(t) for t in tab]
+    algo = Simplex(fit)
     #algo = Simplex(rosenbrock_function)
     t = Test(algo, (None, 2), 1000)
     t.optimize()
