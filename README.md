@@ -4,3 +4,6 @@ Installation:
 
 - clone the repo
 - install a local mongodb service (http://docs.mongodb.org/manual/installation/) 
+- check that you have virtualenv, mkvirtualenvwrapper installed (useful tools for python)
+- mkvirtualenv optim_server
+- pip install -r requirements.txt
