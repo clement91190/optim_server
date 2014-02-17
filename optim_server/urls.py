@@ -22,15 +22,18 @@ def get_params():
 
 @app.route('/post_results', methods=['GET'])
 def post_results():
-    res = request.args.get('res')
-    id = request.args.get('id')
-    res = float(res)
-    obj = models.ParamInstance.objects.get(id=id)
-    obj.done = True
-    obj.assigned = False
-    obj.score = res
-    obj.save()
-    return json.dumps(None)
+    try:
+        res = request.args.get('res')
+        id = request.args.get('id')
+        res = float(res)
+        obj = models.ParamInstance.objects.get(id=id)
+        obj.done = True
+        obj.assigned = False
+        obj.score = res
+        obj.save()
+        return json.dumps(None)
+    except:
+        return json.dumps(None)
 
 
 #TaskManager urls
@@ -40,7 +43,6 @@ def post_params():
     print req_json
     data = req_json
     params = data['params']
-    print params
     try:
         optim_problem = data['optim_problem']
     except:

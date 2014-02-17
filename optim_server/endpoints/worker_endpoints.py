@@ -9,7 +9,11 @@ def get_task(optim_problem="default"):
     url = "http://127.0.0.1:5000/get_params?optim_problem={}".format(optim_problem)
     req = urllib2.Request(url)
     res = None
+    counter = 0
     while res is None:
+        if counter % 100 == 1:
+            print "waiting ..."
+        counter += 1
         f = urllib2.urlopen(req)
         res = f.read()
         res = json.loads(res)

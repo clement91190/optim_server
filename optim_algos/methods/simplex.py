@@ -13,6 +13,7 @@ class Simplex(OptimizationAlgorithm):
         self.fitness = fitness
 
     def initialize(self, (points, size)):
+        """ size is the number of free parameters """
 
         self.size = size
         self.popul_size = size + 1
