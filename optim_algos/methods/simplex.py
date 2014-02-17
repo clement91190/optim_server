@@ -108,7 +108,7 @@ class Simplex(OptimizationAlgorithm):
             print k
             if k % 20 == 0:
                 self.restart()
-            self.plot()
+            #self.plot()
             #raw_input()
 
     def get_result(self):
