@@ -26,7 +26,7 @@ class GeneticAlgorithm(OptimizationAlgorithm):
             self.random_init()
         else:
             self.population = population
-        self.evaluations = [self.fitness(p) for p in self.population]
+        self.evaluations = self.fitness(population)
         self.killed = []
         self.stored_results = []
         self.fig = plt.figure()
@@ -69,8 +69,9 @@ class GeneticAlgorithm(OptimizationAlgorithm):
 
     def evaluation_of_childrens(self):
         """ evaluation of children"""
-        for i in [elem for elem in range(self.popul_size) if self.evaluations[elem] is None]:
-            val = self.fitness(self.population[i])
+        ind = [self.population[elem] for elem in range(self.popul_size) if self.evaluations[elem] is None]
+        val = self.fitness([self.population[i] for i in ind])
+        for i, v in zip(ind, val):
             self.evaluations[i] = val
 
     def mutation(self):
