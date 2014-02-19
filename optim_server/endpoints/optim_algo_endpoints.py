@@ -11,7 +11,7 @@ def eval_fitness_function(tab, optim_problem="default", optim_run=0):
     ids = []
     results = []
     for params in tab:
-        #print params
+        print params
         ids.append(send_parameters(list(params), optim_problem, optim_run))
     for id in ids:
         res = get_results(id)

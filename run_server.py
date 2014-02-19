@@ -1,5 +1,6 @@
 import os
 from optim_server import app
+import optim_server.urls
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
